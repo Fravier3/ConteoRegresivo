@@ -42,8 +42,8 @@
     }
 
     #nowLabel {
-  display: none;
-}
+      display: none;
+    }
 
     .title{
       font-size: clamp(26px, 4vw, 44px);
@@ -76,7 +76,7 @@
       text-align:center;
       overflow:hidden;
     }
-    .unit:before{ /* soft sheen */
+    .unit:before{
       content:""; position:absolute; inset:-2px; pointer-events:none;
       background: radial-gradient(240px 120px at 30% -10%, rgba(255,255,255,.18), transparent 60%),
                   radial-gradient(200px 140px at 80% 120%, rgba(124,92,255,.25), transparent 60%);
@@ -124,7 +124,7 @@
   <div class="wrap">
     <div class="card">
       <h1 class="title">Oye Pao, para verte solo faltan:</h1>
-      <p class="subtitle" id="targetLabel">Cuenta regresiva hacia el <strong>9 de octubre 2025</strong>.</p>
+      <p class="subtitle" id="targetLabel">Cuenta regresiva hacia el <strong>1 de diciembre 2025</strong>.</p>
 
       <div class="grid" aria-live="polite" aria-atomic="true">
         <div class="unit"><div class="value" id="days">0</div><div class="label">Días</div></div>
@@ -139,16 +139,16 @@
 
       <div class="footer">
         <span class="badge"><span class="dot"></span> En vivo</span>
-        <span  id="nowLabel">Sincronizando…</span>
+        <span id="nowLabel">Sincronizando…</span>
       </div>
     </div>
   </div>
 
   <script>
     (function(){
-      // Puerto Rico no usa horario de verano; su zona es UTC-4 todo el año.
-      // 9 de octubre 9:00 p.m. PR == 10 de octubre 01:00:00 UTC
-      const targetUTC = Date.UTC(2025, 9, 10, 1, 0, 0); // meses 0-indexados
+      // Puerto Rico está en UTC-4 todo el año (sin DST).
+      // Target: 1 de diciembre de 2025 00:00 PR == 1 de diciembre 04:00:00 UTC
+      const targetUTC = Date.UTC(2025, 11, 1, 4, 0, 0); // meses 0-indexados (11 = diciembre)
       const target = new Date(targetUTC);
 
       const $ = (id)=>document.getElementById(id);
