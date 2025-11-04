@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>... ???</title>
+  <title>Para verte solo faltan:</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -25,10 +23,9 @@
       margin:0;
       font-family:"Poppins", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
       color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(124,92,255,.18), transparent 60%),
-        radial-gradient(1000px 600px at 85% 90%, rgba(0,209,255,.18), transparent 60%),
-        linear-gradient(150deg, var(--bg1), var(--bg2));
+      background: radial-gradient(1200px 700px at 15% 10%, rgba(124,92,255,.18), transparent 60%),
+                  radial-gradient(1000px 600px at 85% 90%, rgba(0,209,255,.18), transparent 60%),
+                  linear-gradient(150deg, var(--bg1), var(--bg2));
       display:flex;align-items:center;justify-content:center;
       padding:24px;
     }
@@ -44,6 +41,10 @@
       overflow:hidden;
     }
 
+    #nowLabel {
+      display: none;
+    }
+
     .title{
       font-size: clamp(26px, 4vw, 44px);
       font-weight: 700;
@@ -52,119 +53,165 @@
       margin:0 0 18px;
       letter-spacing:.3px;
     }
-    .subtitle{
-      text-align:center;
-      color:var(--muted);
-      margin:0 0 26px;
+    .subtitle{ 
+      text-align:center; 
+      color:var(--muted); 
+      margin:0 0 26px; 
       font-size:clamp(12px,1.8vw,14px);
     }
-
-    /* Mensaje principal */
-    .message{
-      display:flex;align-items:center;justify-content:center;
-      text-align:center;
-      min-height: 160px;
-      border-radius:20px;
-      padding:28px 20px;
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap:16px;
+    }
+    @media (max-width:720px){
+      .grid{ grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+    }
+    .unit{
+      position:relative;
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       border:1px solid rgba(255,255,255,.08);
-      position:relative;
+      border-radius:20px;
+      padding:20px 16px;
+      text-align:center;
       overflow:hidden;
     }
-    .message:before{
+    .unit:before{ /* soft sheen */
       content:""; position:absolute; inset:-2px; pointer-events:none;
-      background:
-        radial-gradient(240px 120px at 30% -10%, rgba(255,255,255,.18), transparent 60%),
-        radial-gradient(200px 140px at 80% 120%, rgba(124,92,255,.25), transparent 60%);
+      background: radial-gradient(240px 120px at 30% -10%, rgba(255,255,255,.18), transparent 60%),
+                  radial-gradient(200px 140px at 80% 120%, rgba(124,92,255,.25), transparent 60%);
       opacity:.6;
     }
-    .message-text{
+    .value{
       font-variant-numeric: tabular-nums;
-      font-size: clamp(22px, 3.8vw, 40px);
-      font-weight:700;
-      line-height:1.2;
-      letter-spacing:.3px;
+      font-size: clamp(38px, 7.5vw, 72px);
+      font-weight: 700;
+      line-height:1;
+      letter-spacing: 1px;
       text-shadow: 0 2px 0 rgba(0,0,0,.25);
       animation: pop .8s ease both;
     }
-
+    .label{
+      margin-top:6px;
+      font-weight:600;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      font-size:12px;
+      color: var(--muted);
+    }
     @keyframes pop { from{ transform: translateY(6px); opacity:.4 } to{ transform: translateY(0); opacity:1 } }
 
+    .bar{
+      margin: 26px 0 6px; height:8px; border-radius:999px; background:rgba(255,255,255,.06);
+      overflow:hidden; position:relative;
+    }
+    .bar > span{
+      position:absolute; inset:0; transform-origin:left center; 
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: var(--glow);
+    }
     .footer{
-      display:flex; gap:10px; align-items:center; justify-content:center;
-      color:var(--muted); font-size:12px; margin-top:16px;
+      display:flex; gap:10px; align-items:center; justify-content:center; 
+      color:var(--muted); font-size:12px; margin-top:10px;
     }
     .badge{
       padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08);
     }
     .dot{width:6px; height:6px; border-radius:50%; background:var(--accent-2); display:inline-block; box-shadow:0 0 12px rgba(0,209,255,.6)}
-
-    /* Ocultamos cualquier rastro del reloj previo */
-    #nowLabel{ display:none; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1 class="title">Upss…</h1>
-      <p class="subtitle"></p>
+      <h1 class="title">Te veo en:</h1>
+      <p class="subtitle" id="targetLabel">Cuenta regresiva hacia el <strong>28 de diciembre 2025</strong>.</p>
 
-      <div class="message">
-        <div class="message-text" id="msg">Cargando…</div>
+      <div class="grid" aria-live="polite" aria-atomic="true">
+        <div class="unit"><div class="value" id="days">0</div><div class="label">Días</div></div>
+        <div class="unit"><div class="value" id="hours">0</div><div class="label">Horas</div></div>
+        <div class="unit"><div class="value" id="minutes">0</div><div class="label">Minutos</div></div>
+        <div class="unit"><div class="value" id="seconds">0</div><div class="label">Segundos</div></div>
+      </div>
+
+      <div class="bar" role="progressbar" aria-label="Progreso hacia la fecha" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span id="barFill" style="transform:scaleX(0)"></span>
       </div>
 
       <div class="footer">
         <span class="badge"><span class="dot"></span> En vivo</span>
+        <span id="nowLabel">Sincronizando…</span>
       </div>
     </div>
   </div>
 
   <script>
     (function(){
-      // --- Utilidades de zona horaria (Puerto Rico es UTC-4 todo el año, sin DST) ---
-      function nowPR(){
+      // Puerto Rico no usa horario de verano; su zona es UTC-4 todo el año.
+      // Objetivo: 28 de diciembre de 2025 a las 00:00:00 hora de PR == 28 de diciembre 04:00:00 UTC
+      const targetUTC = Date.UTC(2025, 11, 28, 4, 0, 0); // meses 0-indexados (12 -> 11)
+      const target = new Date(targetUTC);
+
+      const $ = (id)=>document.getElementById(id);
+      const daysEl=$('days'), hoursEl=$('hours'), minutesEl=$('minutes'), secondsEl=$('seconds');
+      const bar=$('barFill');
+      const nowLabel=$('nowLabel');
+
+      // Para el progreso, tomamos el momento de carga como inicio
+      const start = new Date();
+      const totalMs = target - start;
+
+      function pad(n){ return n.toString().padStart(2,'0'); }
+
+      function formatLocal(dt){
+        try{
+          return new Intl.DateTimeFormat(undefined, { dateStyle:'full', timeStyle:'medium' }).format(dt);
+        }catch(e){ return dt.toLocaleString(); }
+      }
+
+      function tick(){
         const now = new Date();
-        const offsetHours = -4 - (now.getTimezoneOffset()/60); // PR (-4) menos la zona local
-        return new Date(now.getTime() + offsetHours*3600*1000);
+        let diff = target - now; // en ms
+
+        if (diff <= 0){
+          daysEl.textContent = '00';
+          hoursEl.textContent = '00';
+          minutesEl.textContent = '00';
+          secondsEl.textContent = '00';
+          bar.style.transform = 'scaleX(1)';
+          bar.parentElement.setAttribute('aria-valuenow','100');
+          $('targetLabel').innerHTML = '¡Llegó el momento!';
+          nowLabel.textContent = formatLocal(now);
+          clearInterval(timer);
+          return;
+        }
+
+        const sec = Math.floor(diff / 1000);
+        const days = Math.floor(sec / 86400);
+        const hours = Math.floor((sec % 86400) / 3600);
+        const minutes = Math.floor((sec % 3600) / 60);
+        const seconds = sec % 60;
+
+        daysEl.textContent = String(days).padStart(2,'0');
+        hoursEl.textContent = pad(hours);
+        minutesEl.textContent = pad(minutes);
+        secondsEl.textContent = pad(seconds);
+
+        // Progreso desde que se abrió la página
+        const elapsed = now - start;
+        const pct = Math.max(0, Math.min(1, elapsed / totalMs));
+        bar.style.transform = `scaleX(${pct})`;
+        bar.parentElement.setAttribute('aria-valuenow', String(Math.round(pct*100)));
+
+        nowLabel.textContent = 'Ahora: ' + formatLocal(now);
       }
 
-      // Mapear día de la semana (0=Dom,1=Lun,...,6=Sáb) a mensaje
-      const M1 = "El número no está en el mensaje, está en el silencio";
-      const M2 = "Ya pasó antes, solo que lo olvidaste";
-      const M3 = "Este mensaje se autodestruirá cuando lo entiendas";
+      // Pintar de una
+      tick();
+      const timer = setInterval(tick, 1000);
 
-      function getMessageForDay(dow){
-        // Ciclo de 2 días y repetición:
-        // Lun-Mar -> M1
-        // Mié-Jue -> M2
-        // Vie-Sáb -> M3
-        // Dom     -> M1 (reinicio del ciclo)
-        if (dow === 1 || dow === 2 || dow === 0) return M1;      // Lun, Mar, Dom
-        if (dow === 3 || dow === 4) return M2;                   // Mié, Jue
-        return M3;                                               // Vie, Sáb
-      }
-
-      const msgEl = document.getElementById('msg');
-
-      function render(){
-        const pr = nowPR();
-        // Truco: usar el "día UTC" del tiempo ajustado para obtener el día real en PR
-        const dowPR = new Date(pr.getTime()).getUTCDay();
-        msgEl.textContent = getMessageForDay(dowPR);
-      }
-
-      render();
-
-      // Actualiza cada minuto por si cambia el día estando abierta la página
-      setInterval(render, 60 * 1000);
-
-      // Al volver a la pestaña, refresca
-      document.addEventListener('visibilitychange', () => { if(!document.hidden) render(); });
+      // Seguridad por si el equipo se duerme / cambia de pestaña
+      document.addEventListener('visibilitychange', () => { if(!document.hidden) tick(); });
     })();
   </script>
 </body>
 </html>
-
-
-
-
